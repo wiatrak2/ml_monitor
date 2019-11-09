@@ -37,17 +37,19 @@ class GDrive:
         self.root = GDriveFile("/", "root")
         self._load_dir(self.root)
 
-    def get_file(self, path):
+    def get(self, path):
         path_parts = filter(None, path.split("/"))
         file_handler = self.root
         for part in path_parts:
             if not file_handler.contains(part):
                 self._load_dir(file_handler)
             file_handler = file_handler.get_subfile(part)
+            if file_handler is None:
+                break
         return file_handler
 
     def get_dir(self, path):
-        dir_handler = self.get_file(path)
+        dir_handler = self.get(path)
         self._load_dir(dir_handler)
         return dir_handler
 
@@ -57,7 +59,7 @@ class GDrive:
             dir_file.append(GDriveFile(file["title"], file["id"]))
 
     def download(self, path, filename=None):
-        file_handler = self.get_file(path)
+        file_handler = self.get(path)
         gdrive_file = self.drive.CreateFile({"id": file_handler.id})
         if filename is None:
             filename = gdrive_file["title"]
@@ -89,14 +91,7 @@ class GDrive:
 
     def upload(self, src, dst):
         dst_file_handler = self.create(dst)
-
-
-
-
-gdrive = GDrive()
-print(gdrive.root.name)
-gdrive.download("/DistSup/docs/404.html")
-test_file = gdrive.get_file("/pydrive/test/test.yml")
-test_file = gdrive.get_file("/pydrive/test/test.yml")
-print('>>', test_file.name)
-test_file = gdrive.create("/pydrive/test/test2.yml")
+        gdrive_file = self.drive.CreateFile({"id": dst_file_handler.id})
+        gdrive_file.SetContentFile(src)
+        gdrive_file.Upload()
+        return dst_file_handler
