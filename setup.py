@@ -8,7 +8,7 @@ setup(
     author_email='wpratkowiecki@gmail.com',
     packages=find_packages(),
     install_requires=[
-        'statsd>=3.3.0,<4'
+        'pydrive>=1.3.0,<2'
     ],
     python_requires='>=3.6',
 )

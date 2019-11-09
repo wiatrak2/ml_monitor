@@ -10,6 +10,8 @@ class GDriveFile:
         self._subfiles = list(subfiles)
 
     def __getitem__(self, index):
+        if type(index) is str:
+            return next(s for s in self._subfiles if s.name == index)
         return self._subfiles[index]
 
     def append(self, file):
@@ -24,7 +26,6 @@ class GDriveFile:
         return next(subfile, None)
 
 class GDrive:
-
     def __init__(self, settings_file=None):
         if settings_file is None:
             settings_file = os.path.join(os.path.dirname(__file__), "settings.yaml")
@@ -33,34 +34,69 @@ class GDrive:
         gauth.CommandLineAuth()
 
         self.drive = GoogleDrive(gauth)
-        self.fs = GDriveFile("/", "root")
-        self._load_dir(self.fs)
+        self.root = GDriveFile("/", "root")
+        self._load_dir(self.root)
 
     def get_file(self, path):
         path_parts = filter(None, path.split("/"))
-        fs = self.fs
+        file_handler = self.root
         for part in path_parts:
-            if not fs.contains(part):
-                self._load_dir(fs)
-            fs = fs.get_subfile(part)
-        return fs
+            if not file_handler.contains(part):
+                self._load_dir(file_handler)
+            file_handler = file_handler.get_subfile(part)
+        return file_handler
 
     def get_dir(self, path):
-        dir_fs = self.get_file(path)
-        self._load_dir(dir_fs)
-        return dir_fs
+        dir_handler = self.get_file(path)
+        self._load_dir(dir_handler)
+        return dir_handler
 
     def _load_dir(self, dir_file):
         dir_file_list = self.drive.ListFile({"q": f"'{dir_file.id}' in parents and trashed=false"}).GetList()
         for file in dir_file_list:
             dir_file.append(GDriveFile(file["title"], file["id"]))
 
+    def download(self, path, filename=None):
+        file_handler = self.get_file(path)
+        gdrive_file = self.drive.CreateFile({"id": file_handler.id})
+        if filename is None:
+            filename = gdrive_file["title"]
+        gdrive_file.GetContentFile(filename)
+
+    def _create_file(self, filename, parent_handler, directory=False):
+        gdrive_file_data = {
+            "title": filename,
+            "parents": [{"id": parent_handler.id}],
+        }
+        if directory:
+            gdrive_file_data["mimeType"] = "application/vnd.google-apps.folder"
+        gdrive_file = self.drive.CreateFile(gdrive_file_data)
+        gdrive_file.Upload()
+        file_id = gdrive_file["id"]
+        parent_handler.append(GDriveFile(filename, file_id))
+
+    def create(self, path, directory=False):
+        path_parts = list(filter(None, path.split("/")))
+        dirs, filename = path_parts[:-1], path_parts[-1]
+        file_handler = self.root
+        for dir_name in dirs:
+            if not file_handler.contains(dir_name):
+                self._create_file(dir_name, file_handler, directory=True)
+            file_handler = file_handler.get_subfile(dir_name)
+        if not file_handler.contains(filename):
+            self._create_file(filename, file_handler, directory=directory)
+        return file_handler.get_subfile(filename)
+
+    def upload(self, src, dst):
+        dst_file_handler = self.create(dst)
+
+
 
 
 gdrive = GDrive()
-print(gdrive.fs.name)
-master_thesis = gdrive.get_dir('master_thesis/')
-print(master_thesis.name, '!!')
-for file in master_thesis:
-    print(file.name)
-
+print(gdrive.root.name)
+gdrive.download("/DistSup/docs/404.html")
+test_file = gdrive.get_file("/pydrive/test/test.yml")
+test_file = gdrive.get_file("/pydrive/test/test.yml")
+print('>>', test_file.name)
+test_file = gdrive.create("/pydrive/test/test2.yml")
