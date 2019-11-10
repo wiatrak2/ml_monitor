@@ -12,9 +12,3 @@ def init(config_file=None, config_name=None):
     config.CONFIG = config.Config(config_file, config_name=config_name)
     log.LOG_THREAD = log.ValueMonitor()
     log.LOG_THREAD.start()
-
-def test():
-    test_path = "/content/drive/My Drive/ml_monitoring_test/test_p"
-    with open(test_path, "w") as f:
-        f.write("test passed")
-    f.close()
