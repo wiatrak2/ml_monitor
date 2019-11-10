@@ -1,0 +1,2 @@
+log_file: .ml_monitor/monitor.log
+log_interval_sec: 5

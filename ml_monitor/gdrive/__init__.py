@@ -53,29 +53,12 @@ class GDrive:
         self._load_dir(dir_handler)
         return dir_handler
 
-    def _load_dir(self, dir_file):
-        dir_file_list = self.drive.ListFile({"q": f"'{dir_file.id}' in parents and trashed=false"}).GetList()
-        for file in dir_file_list:
-            dir_file.append(GDriveFile(file["title"], file["id"]))
-
     def download(self, path, filename=None):
         file_handler = self.get(path)
         gdrive_file = self.drive.CreateFile({"id": file_handler.id})
         if filename is None:
             filename = gdrive_file["title"]
         gdrive_file.GetContentFile(filename)
-
-    def _create_file(self, filename, parent_handler, directory=False):
-        gdrive_file_data = {
-            "title": filename,
-            "parents": [{"id": parent_handler.id}],
-        }
-        if directory:
-            gdrive_file_data["mimeType"] = "application/vnd.google-apps.folder"
-        gdrive_file = self.drive.CreateFile(gdrive_file_data)
-        gdrive_file.Upload()
-        file_id = gdrive_file["id"]
-        parent_handler.append(GDriveFile(filename, file_id))
 
     def create(self, path, directory=False):
         path_parts = list(filter(None, path.split("/")))
@@ -95,3 +78,21 @@ class GDrive:
         gdrive_file.SetContentFile(src)
         gdrive_file.Upload()
         return dst_file_handler
+
+    def _load_dir(self, dir_file):
+        dir_file_list = self.drive.ListFile({"q": f"'{dir_file.id}' in parents and trashed=false"}).GetList()
+        for file in dir_file_list:
+            dir_file.append(GDriveFile(file["title"], file["id"]))
+
+    def _create_file(self, filename, parent_handler, directory=False):
+        gdrive_file_data = {
+            "title": filename,
+            "parents": [{"id": parent_handler.id}],
+        }
+        if directory:
+            gdrive_file_data["mimeType"] = "application/vnd.google-apps.folder"
+        gdrive_file = self.drive.CreateFile(gdrive_file_data)
+        gdrive_file.Upload()
+        file_id = gdrive_file["id"]
+        parent_handler.append(GDriveFile(filename, file_id))
+

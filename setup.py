@@ -7,8 +7,10 @@ setup(
     author=u'Wojciech Pratkowiecki',
     author_email='wpratkowiecki@gmail.com',
     packages=find_packages(),
+    include_package_data=True,
     install_requires=[
-        'pydrive>=1.3.0,<2'
+        'pydrive>=1.3.0,<2',
+        'prometheus_client>=0.7.1,<1',
     ],
     python_requires='>=3.6',
 )

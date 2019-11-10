@@ -1,4 +1,7 @@
 __pycache__
 *.pyc
 *.ipynb_checkpoints
+.ml_monitor
 .vscode
+
+playground.ipynb
