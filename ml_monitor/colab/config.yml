@@ -1,0 +1,2 @@
+log_file: /content/drive/My Drive/.ml_monitor/monitor.log
+log_interval_sec: 8

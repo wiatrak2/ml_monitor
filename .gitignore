@@ -4,4 +4,5 @@ __pycache__
 .ml_monitor
 .vscode
 
+credentials.json
 playground.ipynb

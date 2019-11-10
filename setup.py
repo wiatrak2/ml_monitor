@@ -11,6 +11,7 @@ setup(
     install_requires=[
         'pydrive>=1.3.0,<2',
         'prometheus_client>=0.7.1,<1',
+        'pyyaml>=5.1.2,<6',
     ],
     python_requires='>=3.6',
 )
