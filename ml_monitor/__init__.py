@@ -3,14 +3,13 @@ import os
 from ml_monitor import log
 from ml_monitor import gdrive
 from ml_monitor import colab
-from ml_monitor.config import config, Config
+from ml_monitor import config
+from ml_monitor import prometheus
 
-def init(config_file=None, config_name=None):
+def init(config_file=None):
     if config_file is None:
         config_file = os.path.join(os.path.dirname(__file__), "config.yml")
-    if config_name is None:
-        config_name = list(filter(None, os.getcwd().split("/")))[-1]
-    config = Config(config_file, config_name=config_name)
+    config.config = config.Config(config_file)
     log.monitor_thread = log.ValueMonitor()
     log.monitor_thread.start()
 
@@ -23,3 +22,9 @@ def start():
 def stop():
     log.monitor_thread.stop()
 
+def colab(config_file=None):
+    if config_file is None:
+        config_file = os.path.join(os.path.dirname(__file__), "colab", "config.yml")
+    config.config = config.Config(config_file)
+    gdrive_settings = config.config["gdrive_settings_file"]
+    gdrive.gdrive  = gdrive.GDrive(gdrive_settings)

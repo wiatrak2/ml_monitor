@@ -1,16 +1,16 @@
 import threading
 
-from ml_monitor.config import config
+from ml_monitor import config
 
 class ValueMonitor:
     def __init__(self):
         self.monitor_values = {}
-        self.log_file = config.log_file
+        self.log_file = config.config.log_file
         self.thread_running = False
 
     def log(self):
         with open(self.log_file, "w") as f:
-            f.write(f"{config.config_name}:\n")
+            f.write(f"{config.config.config_title}:\n")
             for var in self.monitor_values:
                 f.write(f"{var}: {self.monitor_values[var]}\n")
         f.close()
@@ -28,7 +28,7 @@ class ValueMonitor:
 
     def start(self):
         if not self.thread_running:
-            self.thread = threading.Timer(config.log_interval_sec, self._run_thread)
+            self.thread = threading.Timer(config.config.log_interval_sec, self._run_thread)
             self.thread.start()
             self.thread_running = True
 

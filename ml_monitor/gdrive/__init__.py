@@ -96,3 +96,4 @@ class GDrive:
         file_id = gdrive_file["id"]
         parent_handler.append(GDriveFile(filename, file_id))
 
+gdrive = None

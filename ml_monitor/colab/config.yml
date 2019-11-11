@@ -1,2 +1,5 @@
-log_file: /content/drive/My Drive/.ml_monitor/monitor.log
+title: colab_ml_monitor
 log_interval_sec: 8
+log_file: .ml_monitor/monitor.log
+files_location: gdrive
+remote_log_file: /content/drive/My Drive/.ml_monitor/monitor.log

@@ -2,7 +2,8 @@ __pycache__
 *.pyc
 *.ipynb_checkpoints
 .ml_monitor
+ml_monitor.egg-info
 .vscode
 
-credentials.json
+**/credentials.json
 playground.ipynb
