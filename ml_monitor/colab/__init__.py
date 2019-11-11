@@ -24,3 +24,6 @@ def sync(config_file=None):
     fetch_interval_sec = config.config["fetch_interval_sec"] or 3
     gdrive_fetcher.fetch_thread = gdrive_fetcher.GDriveFetcher(fetch_interval_sec=fetch_interval_sec)
     gdrive_fetcher.fetch_thread.start()
+
+def sync_stop():
+    gdrive_fetcher.fetch_thread.stop()
