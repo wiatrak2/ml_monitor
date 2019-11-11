@@ -37,4 +37,4 @@ class Config:
             except Exception as e:
                 raise Exception(f"Could not create log file {self.log_file}.\n {e}")
 
-CONFIG = None
+config = None
