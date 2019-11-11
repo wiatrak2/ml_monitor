@@ -18,6 +18,13 @@ class Config:
     def __getitem__(self, key):
         return self.config.get(key)
 
+    def get_logging_file(self):
+        if self.files_location == "local":
+            return self.log_file
+        elif self.files_location == "gdrive":
+            return self.config.get("remote_log_file")
+        return None
+
     def _parse_config(self):
         self.config_title = self.config.get("title", list(filter(None, os.getcwd().split("/")))[-1])
         self.files_location = self.config.get("files_location", "local")

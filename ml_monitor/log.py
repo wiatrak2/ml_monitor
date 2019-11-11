@@ -5,7 +5,7 @@ from ml_monitor import config
 class ValueMonitor:
     def __init__(self):
         self.monitor_values = {}
-        self.log_file = config.config.log_file
+        self.log_file = config.config.get_logging_file()
         self.thread_running = False
 
     def log(self):

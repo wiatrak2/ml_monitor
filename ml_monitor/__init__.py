@@ -21,10 +21,3 @@ def start():
 
 def stop():
     log.monitor_thread.stop()
-
-def colab(config_file=None):
-    if config_file is None:
-        config_file = os.path.join(os.path.dirname(__file__), "colab", "config.yml")
-    config.config = config.Config(config_file)
-    gdrive_settings = config.config["gdrive_settings_file"]
-    gdrive.gdrive  = gdrive.GDrive(gdrive_settings)
