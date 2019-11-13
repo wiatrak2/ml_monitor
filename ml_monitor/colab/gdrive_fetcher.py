@@ -29,10 +29,10 @@ class GDriveFetcher:
         self.thread_running = False
 
     def _resolve_log_file(self):
-        if config.config["gdrive_log_file"] is not None:
-            return config.config["gdrive_log_file"]
+        if config.config.gdrive_log_file is not None:
+            return config.config.gdrive_log_file
 
-        remote_log_file = config.config["remote_log_file"]
+        remote_log_file = config.config.remote_log_file
         file_location_parts = list(filter(None, remote_log_file.split("/")))
         gdrive_loc = ""
         for part in file_location_parts[::-1]:

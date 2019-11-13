@@ -9,11 +9,14 @@ class ValueMonitor:
         self.thread_running = False
 
     def log(self):
-        with open(self.log_file, "w") as f:
-            f.write(f"{config.config.config_title}:\n")
-            for var in self.monitor_values:
-                f.write(f"{var}: {self.monitor_values[var]}\n")
-        f.close()
+        try:
+            with open(self.log_file, "w") as f:
+                f.write(f"{config.config.config_title}:\n")
+                for var in self.monitor_values:
+                    f.write(f"{var}: {self.monitor_values[var]}\n")
+        except:
+            self.thread.cancel()
+            self.thread_running = False
 
     def monitor(self, name, value):
         self.monitor_values[name] = value

@@ -18,6 +18,9 @@ class Config:
     def __getitem__(self, key):
         return self.config.get(key)
 
+    def __getattr__(self, item):
+        return self.config.get(item)
+
     def get_logging_file(self):
         if self.files_location == "local":
             return self.log_file
