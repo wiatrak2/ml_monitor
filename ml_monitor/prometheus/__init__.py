@@ -1,1 +1,1 @@
-from ml_monitor import config
+from ml_monitor.prometheus import metrics, metrics_collecor

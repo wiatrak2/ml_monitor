@@ -2,6 +2,7 @@ import threading
 
 from ml_monitor import gdrive
 from ml_monitor import config
+from ml_monitor import prometheus
 
 class GDriveFetcher:
     def __init__(self, fetch_interval_sec=3):
@@ -11,12 +12,18 @@ class GDriveFetcher:
         self.thread_running = False
 
     def fetch(self):
-        gdrive.gdrive.download(self.remote_log_file, self.local_log_file)
+        with prometheus.metrics.fetching_duration.time():
+            gdrive.gdrive.download(self.remote_log_file, self.local_log_file)
+
+    def parse_for_prometheus(self):
+        if prometheus.metrics_collecor.invoked:
+            prometheus.metrics_collecor.parse_metrics()
 
     def _run_thread(self):
         self.thread_running = False
         self.start()
         self.fetch()
+        self.parse_for_prometheus()
 
     def start(self):
         if not self.thread_running:

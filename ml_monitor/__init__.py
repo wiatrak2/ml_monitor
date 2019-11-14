@@ -24,5 +24,5 @@ def start():
 def stop():
     log.monitor_thread.stop()
 
-def get_config():
+def print_config():
     print(yaml.dump(config.config.config))

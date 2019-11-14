@@ -1,16 +1,31 @@
-from prometheus_client import start_http_server, Summary
-from ml_monitor import gdrive
 import random
 import time
+import json
 
-FETCHING_TIME = Summary("fetching_gdrive_seconds", "time spent on fetching file from Google Drive")
+from prometheus_client import start_http_server
 
-@FETCHING_TIME.time()
-def fetch_metrics(gdrive, src, dst):
-    gdrive.download(src, dst)
+from ml_monitor import colab
+from ml_monitor import config
+from ml_monitor import prometheus
+
+invoked = False
+
+collectors = {}
+
+def parse_metrics():
+    metrics_file = config.config.log_file
+    try:
+        with open(metrics_file, "r") as f:
+            metrics = json.load(f)
+    except:
+        return
+    for m in metrics:
+        if m not in collectors:
+            collectors[m] = prometheus.metrics.get_gauge(m)
+        gauge = collectors[m]
+        gauge.set(metrics[m])
 
 if __name__ == '__main__':
+    prometheus.metrics_collecor.invoked = True
     start_http_server(8000)
-    gdrive = gdrive.GDrive("/Users/Wojtek/Desktop/Coding/ML/monitoring/ml_monitor/gdrive/settings.yaml")
-    while True:
-        fetch_metrics(gdrive, "DistSup/yamls/_default_triple_probes.yaml", "/Users/Wojtek/Desktop/Coding/ML/monitoring/ml_monitor/prometheus/test.yaml")
+    colab.sync()
