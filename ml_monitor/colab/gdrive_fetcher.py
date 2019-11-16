@@ -15,15 +15,10 @@ class GDriveFetcher:
         with prometheus.metrics.fetching_duration.time():
             gdrive.gdrive.download(self.remote_log_file, self.local_log_file)
 
-    def parse_for_prometheus(self):
-        if prometheus.metrics_collecor.invoked:
-            prometheus.metrics_collecor.parse_metrics()
-
     def _run_thread(self):
         self.thread_running = False
         self.start()
         self.fetch()
-        self.parse_for_prometheus()
 
     def start(self):
         if not self.thread_running:

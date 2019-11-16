@@ -1,6 +1,7 @@
 import random
 import time
 import json
+import numpy as np
 
 from prometheus_client import start_http_server
 
@@ -12,6 +13,19 @@ invoked = False
 
 collectors = {}
 
+def distribute_list_metrics(metrics):
+    log_interval = config.config.log_interval_sec
+    for m in metrics:
+        metrics_np = np.array(metrics[m])
+        idx = np.round(np.linspace(0, len(metrics_np) - 1, log_interval)).astype(int)
+        metrics[m] = metrics_np[idx]
+    for i in range(log_interval):
+        start = time.time()
+        for m in metrics:
+            c = collectors[m]
+            c.set(metrics[m][i])
+        time.sleep(1 - (time.time() - start))
+
 def parse_metrics():
     metrics_file = config.config.log_file
     try:
@@ -21,11 +35,15 @@ def parse_metrics():
         return
     for m in metrics:
         if m not in collectors:
-            collectors[m] = prometheus.metrics.get_gauge(m)
-        gauge = collectors[m]
-        gauge.set(metrics[m])
+            collectors[m] = prometheus.metrics.get_gauge(m) # Just gauges so far
+        if isinstance(metrics[m], (int, float)):
+            c = collectors[m]
+            c.set(metrics[m])
+    distribute_list_metrics({m: metrics[m] for m in metrics if type(metrics[m]) is list})
 
 if __name__ == '__main__':
     prometheus.metrics_collecor.invoked = True
     start_http_server(8000)
     colab.sync()
+    while True:
+        parse_metrics()
