@@ -54,9 +54,10 @@ class Config:
         logging.debug(f"Creating logging file {self.log_file}...")
         if not os.path.exists(self.log_file):
             try:
+                logging.info(f"Creating log file {self.log_file}")
                 os.makedirs(os.path.dirname(self.log_file), exist_ok=True)
                 with open(self.log_file, "w") as f:
-                    pass
+                    json.dump({}, f)
             except Exception as e:
                 raise Exception(f"Could not create log file {self.log_file}.\n {e}")
 

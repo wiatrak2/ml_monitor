@@ -12,6 +12,7 @@ class ValueMonitor:
         self.thread_running = False
 
     def log(self):
+        self.monitor_values["title"] = config.config.title
         logging.debug("Serializing metrics...")
         try:
             with open(self.log_file, "w") as f:

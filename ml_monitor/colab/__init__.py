@@ -33,3 +33,10 @@ def sync(config_file=None):
 def sync_stop():
     logging.info("Stopping Google Colab sychronization...")
     gdrive_fetcher.fetch_thread.stop()
+
+def set_model(model_name):
+    config.config.title = config.config.config_title + model_name
+
+def stop_training():
+    for metric in log.monitor_thread.monitor_values:
+        log.monitor_thread.monitor_values[metric] = -1
