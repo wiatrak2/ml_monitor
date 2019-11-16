@@ -3,6 +3,7 @@ import threading
 from ml_monitor import gdrive
 from ml_monitor import config
 from ml_monitor import prometheus
+from ml_monitor import logging
 
 class GDriveFetcher:
     def __init__(self, fetch_interval_sec=3):
@@ -12,6 +13,7 @@ class GDriveFetcher:
         self.thread_running = False
 
     def fetch(self):
+        logging.debug("Fetching metrics from Google Drive...")
         with prometheus.metrics.fetching_duration.time():
             gdrive.gdrive.download(self.remote_log_file, self.local_log_file)
 
@@ -21,16 +23,19 @@ class GDriveFetcher:
         self.fetch()
 
     def start(self):
+        logging.debug("Starting Google Drive featching thread.")
         if not self.thread_running:
             self.thread = threading.Timer(self.fetch_interval_sec, self._run_thread)
             self.thread.start()
             self.thread_running = True
 
     def stop(self):
+        logging.info("Stopping Google Drive featching thread.")
         self.thread.cancel()
         self.thread_running = False
 
     def _resolve_log_file(self):
+        logging.debug("Resolving log file location...")
         if config.config.gdrive_log_file is not None:
             return config.config.gdrive_log_file
 
@@ -40,6 +45,7 @@ class GDriveFetcher:
         for part in file_location_parts[::-1]:
             gdrive_loc = f"/{part}{gdrive_loc}"
             if gdrive.gdrive.get(gdrive_loc) is not None:
+                logging.info(f"Google Drive log file location resolved as {gdrive_loc}.")
                 return gdrive_loc
 
         raise Exception(f"Could not resolve log file location from config: {remote_log_file}")

@@ -4,12 +4,14 @@ import yaml
 from ml_monitor import log
 from ml_monitor import gdrive
 from ml_monitor import colab
+from ml_monitor import logging
 from ml_monitor import config
 from ml_monitor import control
 from ml_monitor import prometheus
 from ml_monitor import utils
 
-def init(config_file=None):
+def init(config_file=None, log_level='info'):
+    logging.create_logger(log_level)
     if config_file is None:
         config_file = os.path.join(os.path.dirname(__file__), "config.yml")
     config.config = utils.safe_init(config.config, config.Config(config_file))

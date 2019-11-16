@@ -2,8 +2,11 @@ import yaml
 import json
 import os
 
+from ml_monitor import logging
+
 class Config:
     def __init__(self, config_file):
+        logging.debug(f"Configuring module using {config_file}...")
         self.config_file = config_file
         self.config = self._load_config_file()
         # Variables to be read from config file
@@ -29,12 +32,14 @@ class Config:
         return None
 
     def _parse_config(self):
+        logging.debug("Parsing configuration file...")
         self.config_title = self.config.get("title", list(filter(None, os.getcwd().split("/")))[-1])
         self.files_location = self.config.get("files_location", "local")
         self.log_file = self.config.get("log_file")
         self.log_interval_sec = self.config.get("log_interval_sec")
 
     def _load_config_file(self):
+        logging.debug(f"Loading configuration file {self.config_file}...")
         with open(self.config_file, "r") as config_file:
             try:
                 config = yaml.safe_load(config_file)
@@ -46,6 +51,7 @@ class Config:
         return config
 
     def _create_log_file(self):
+        logging.debug(f"Creating logging file {self.log_file}...")
         if not os.path.exists(self.log_file):
             try:
                 os.makedirs(os.path.dirname(self.log_file), exist_ok=True)
@@ -53,5 +59,6 @@ class Config:
                     pass
             except Exception as e:
                 raise Exception(f"Could not create log file {self.log_file}.\n {e}")
+
 
 config = None

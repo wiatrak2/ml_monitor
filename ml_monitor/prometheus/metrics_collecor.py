@@ -8,6 +8,7 @@ from prometheus_client import start_http_server
 from ml_monitor import colab
 from ml_monitor import config
 from ml_monitor import prometheus
+from ml_monitor import logging
 
 invoked = False
 
@@ -28,10 +29,12 @@ def distribute_list_metrics(metrics):
 
 def parse_metrics():
     metrics_file = config.config.log_file
+    logging.debug("Parsing metrics...")
     try:
         with open(metrics_file, "r") as f:
             metrics = json.load(f)
-    except:
+    except Exception as e:
+        logging.warning(f"Could not open log file {metrics_file}. Exception message:\n{e}")
         return
     for m in metrics:
         if m not in collectors:
