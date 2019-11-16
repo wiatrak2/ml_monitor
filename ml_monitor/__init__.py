@@ -5,6 +5,7 @@ from ml_monitor import log
 from ml_monitor import gdrive
 from ml_monitor import colab
 from ml_monitor import config
+from ml_monitor import control
 from ml_monitor import prometheus
 from ml_monitor import utils
 

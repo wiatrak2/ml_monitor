@@ -41,9 +41,6 @@ def parse_metrics():
             c.set(metrics[m])
     distribute_list_metrics({m: metrics[m] for m in metrics if type(metrics[m]) is list})
 
-if __name__ == '__main__':
-    prometheus.metrics_collecor.invoked = True
-    start_http_server(8000)
-    colab.sync()
+def run():
     while True:
         parse_metrics()
