@@ -41,7 +41,7 @@ def parse_metrics():
             metrics = json.load(f)
     except Exception as e:
         logging.warning(f"Could not open log file {metrics_file}. Exception message:\n{e}")
-        time.sleep(config.config.log_interval_secs)
+        time.sleep(config.config.log_interval_sec)
         return
     logging.debug(f"Metrics from file {metrics_file} loaded successfully.")
     distribute_list_metrics(metrics)
