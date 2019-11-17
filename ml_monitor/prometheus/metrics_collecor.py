@@ -34,7 +34,7 @@ def distribute_list_metrics(metrics):
         time.sleep(1 - (time.time() - start))
 
 def parse_metrics():
-    metrics_file = config.config.log_file
+    metrics_file = config.config.metrics_log_file
     logging.debug("Parsing metrics...")
     try:
         with open(metrics_file, "r") as f:

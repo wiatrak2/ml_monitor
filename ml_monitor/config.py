@@ -12,7 +12,7 @@ class Config:
         # Variables to be read from config file
         self.config_title = None
         self.files_location = None
-        self.log_file = None
+        self.metrics_log_file = None
         self.log_interval_sec = None
 
         self._parse_config()
@@ -26,16 +26,16 @@ class Config:
 
     def get_logging_file(self):
         if self.files_location == "local":
-            return self.log_file
+            return self.metrics_log_file
         elif self.files_location == "gdrive":
-            return self.config.get("remote_log_file")
+            return self.config.get("remote_metrics_log_file")
         return None
 
     def _parse_config(self):
         logging.debug("Parsing configuration file...")
         self.config_title = self.config.get("title", list(filter(None, os.getcwd().split("/")))[-1])
         self.files_location = self.config.get("files_location", "local")
-        self.log_file = self.config.get("log_file")
+        self.metrics_log_file = self.config.get("metrics_log_file")
         self.log_interval_sec = self.config.get("log_interval_sec")
 
     def _load_config_file(self):
@@ -51,15 +51,15 @@ class Config:
         return config
 
     def _create_log_file(self):
-        logging.debug(f"Creating logging file {self.log_file}...")
-        if not os.path.exists(self.log_file):
+        logging.debug(f"Creating logging file {self.metrics_log_file}...")
+        if not os.path.exists(self.metrics_log_file):
             try:
-                logging.info(f"Creating log file {self.log_file}")
-                os.makedirs(os.path.dirname(self.log_file), exist_ok=True)
-                with open(self.log_file, "w") as f:
+                logging.info(f"Creating log file {self.metrics_log_file}")
+                os.makedirs(os.path.dirname(self.metrics_log_file), exist_ok=True)
+                with open(self.metrics_log_file, "w") as f:
                     json.dump({}, f)
             except Exception as e:
-                raise Exception(f"Could not create log file {self.log_file}.\n {e}")
+                raise Exception(f"Could not create log file {self.metrics_log_file}.\n {e}")
 
 
 config = None

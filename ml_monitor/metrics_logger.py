@@ -10,14 +10,14 @@ class MetricsLogger:
     def __init__(self):
         logging.debug("Creating logging thread...")
         self.monitor_values = defaultdict(list)
-        self.log_file = config.config.get_logging_file()
+        self.metrics_log_file = config.config.get_logging_file()
         self.thread_running = False
 
     def log(self):
         logging.debug("Serializing metrics...")
         self.monitor_values["title"] = config.config.title
         try:
-            with open(self.log_file, "w") as f:
+            with open(self.metrics_log_file, "w") as f:
                 json.dump(self.monitor_values, f)
             self.clean()
         except Exception as e:
