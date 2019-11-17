@@ -33,6 +33,14 @@ def distribute_list_metrics(metrics):
             prometheus_client.push_to_gateway('localhost:9091', job=job_title, registry=prometheus.registry)
         time.sleep(1 - (time.time() - start))
 
+def pull_metrics(metrics):
+    for metrics_dict in metrics:
+        for m in metrics_dict:
+            if m not in collectors:
+                collectors[m] = prometheus.metrics.get_gauge(m, registry=False) # Just gauges so far
+            c = collectors[m]
+            c.set(metrics_dict[m])
+
 def parse_metrics():
     metrics_file = config.config.metrics_log_file
     logging.debug("Parsing metrics...")
@@ -44,6 +52,8 @@ def parse_metrics():
         time.sleep(config.config.log_interval_sec)
         return
     logging.debug(f"Metrics from file {metrics_file} loaded successfully.")
+    if "pull_metrics" in metrics:
+        prometheus.metrics_collecor.pull_metrics(metrics.pop("pull_metrics"))
     distribute_list_metrics(metrics)
 
 def run():

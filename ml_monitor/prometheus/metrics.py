@@ -2,8 +2,8 @@ import prometheus_client
 
 from ml_monitor import prometheus
 
-def get_gauge(metric_name):
-    if prometheus.registry is None:
+def get_gauge(metric_name, registry=True):
+    if not registry:
         return prometheus_client.Gauge(metric_name, metric_name)
     return prometheus_client.Gauge(metric_name, metric_name, registry=prometheus.registry)
 

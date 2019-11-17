@@ -12,9 +12,13 @@ class MetricsLogger:
         self.monitor_values = defaultdict(list)
         self.metrics_log_file = config.config.get_logging_file()
         self.thread_running = False
+        self.pre_log_hooks = []
 
     def log(self):
         logging.debug("Serializing metrics...")
+        for hook in self.pre_log_hooks:
+            logging.debug("Applying hook")
+            hook()
         self.monitor_values["title"] = config.config.title
         try:
             with open(self.metrics_log_file, "w") as f:
@@ -30,9 +34,15 @@ class MetricsLogger:
         logging.debug(f"Receive metric: {name} with value: {value}")
         self.monitor_values[name].append(value)
 
+    def register_hook(self, hook):
+        self.pre_log_hooks.append(hook)
+
     def clean(self):
         logging.debug("Removing monitored metrics")
         self.monitor_values = defaultdict(list)
+
+    def remove_hooks(self):
+        self.pre_log_hooks = []
 
     def _run_thread(self):
         self.thread_running = False

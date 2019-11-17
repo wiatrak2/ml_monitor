@@ -5,7 +5,7 @@ from ml_monitor import metrics_logger
 from ml_monitor import config
 from ml_monitor import utils
 from ml_monitor import logging
-from ml_monitor.colab import gdrive_fetcher
+from ml_monitor.colab import gdrive_fetcher, resources_utilization
 
 def init(config_file=None, log_level='info', log_dir="/content/drive/My Drive/.ml_monitor"):
     if config_file is None:
@@ -13,6 +13,7 @@ def init(config_file=None, log_level='info', log_dir="/content/drive/My Drive/.m
     logging.create_logger(log_level, log_dir=log_dir)
     config.config = utils.safe_init(config.config, config.Config(config_file))
     metrics_logger.metrics_logger_thread = utils.safe_init(metrics_logger.metrics_logger_thread, metrics_logger.MetricsLogger())
+    metrics_logger.metrics_logger_thread.register_hook(resources_utilization.register_utlitization)
     metrics_logger.metrics_logger_thread.start()
 
 def sync(config_file=None):
