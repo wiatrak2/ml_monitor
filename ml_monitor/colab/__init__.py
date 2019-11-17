@@ -1,7 +1,7 @@
 import os
 
 from ml_monitor import gdrive
-from ml_monitor import log
+from ml_monitor import metrics_logger
 from ml_monitor import config
 from ml_monitor import utils
 from ml_monitor import logging
@@ -12,8 +12,8 @@ def init(config_file=None, log_level='info', log_dir="/content/drive/My Drive/.m
         config_file = os.path.join(os.path.dirname(__file__), "config.yml")
     logging.create_logger(log_level, log_dir=log_dir)
     config.config = utils.safe_init(config.config, config.Config(config_file))
-    log.monitor_thread = utils.safe_init(log.monitor_thread, log.ValueMonitor())
-    log.monitor_thread.start()
+    metrics_logger.metrics_logger_thread = utils.safe_init(metrics_logger.metrics_logger_thread, metrics_logger.MetricsLogger())
+    metrics_logger.metrics_logger_thread.start()
 
 def sync(config_file=None):
     logging.debug("Starting Google Colab synchronization...")

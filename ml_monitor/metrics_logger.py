@@ -6,7 +6,7 @@ from collections import defaultdict
 from ml_monitor import config
 from ml_monitor import logging
 
-class ValueMonitor:
+class MetricsLogger:
     def __init__(self):
         logging.debug("Creating logging thread...")
         self.monitor_values = defaultdict(list)
@@ -51,4 +51,4 @@ class ValueMonitor:
         self.thread.cancel()
         self.thread_running = False
 
-monitor_thread = None
+metrics_logger_thread = None
