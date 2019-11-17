@@ -15,11 +15,6 @@ def colab(config_file=None, log_level="info", logging_dir=None):
     ml_monitor.colab.sync(config_file=config_file)
     ml_monitor.control.start()
 
-def colab_pushgateway(config_file=None, log_level="info", logging_dir=None):
-    logging.create_logger(log_level=log_level, log_dir=logging_dir)
-    ml_monitor.colab.sync(config_file=config_file)
-    ml_monitor.prometheus.use_pushgateway()
-
 def stop():
     logging.info("Stopping metrics fetching threads...")
     gdrive_fetcher_thread = ml_monitor.colab.gdrive_fetcher.fetch_thread

@@ -29,3 +29,8 @@ def stop():
 
 def print_config():
     print(yaml.dump(config.config.config))
+
+def set_training(training_name):
+    if not training_name.startswith("_"):
+        training_name = "_" + training_name
+    config.config.title = config.config.config_title + training_name
