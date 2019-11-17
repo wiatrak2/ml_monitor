@@ -4,9 +4,6 @@ import prometheus_client
 from ml_monitor import logging
 from ml_monitor import prometheus
 
-from ml_monitor.prometheus import metrics
-from ml_monitor.prometheus import metrics_collecor
-
 PROMETHEUS_PORT = os.getenv("PROMETHEUS_PORT", 8000)
 GATEWAY_URL = os.getenv("GATEWAY_URL", "localhost:9091")
 
@@ -14,7 +11,7 @@ pushgateway = False
 registry = None
 
 def start():
-    prometheus.metrics_collecor.invoked = True
+    prometheus.metrics_collector.invoked = True
     logging.debug("Creating Prometheus http server...")
     prometheus_client.start_http_server(PROMETHEUS_PORT)
     logging.info(f"Prometheus metrics exposed as: http://localhost:{PROMETHEUS_PORT}")
@@ -25,4 +22,4 @@ def create_pushgateway():
     logging.info(f"Prometheus Pushgateway should be available as {GATEWAY_URL}")
     prometheus.registry = prometheus_client.CollectorRegistry()
     prometheus.pushgateway = True
-    prometheus.metrics_collecor.run()
+    prometheus.metrics_collector.run()

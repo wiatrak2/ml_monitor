@@ -53,7 +53,7 @@ def parse_metrics():
         return
     logging.debug(f"Metrics from file {metrics_file} loaded successfully.")
     if "pull_metrics" in metrics:
-        prometheus.metrics_collecor.pull_metrics(metrics.pop("pull_metrics"))
+        prometheus.metrics_collector.pull_metrics(metrics.pop("pull_metrics"))
     distribute_list_metrics(metrics)
 
 def run():
