@@ -4,6 +4,9 @@ import prometheus_client
 from ml_monitor import logging
 from ml_monitor import prometheus
 
+from ml_monitor.prometheus import metrics
+from ml_monitor.prometheus import metrics_collector
+
 PROMETHEUS_PORT = os.getenv("PROMETHEUS_PORT", 8000)
 GATEWAY_URL = os.getenv("GATEWAY_URL", "localhost:9091")
 
