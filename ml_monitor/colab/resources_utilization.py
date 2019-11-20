@@ -5,7 +5,7 @@ import ml_monitor
 from ml_monitor import logging
 
 def register_utlitization():
-    logging.debug("Registring resources utilization")
+    logging.debug("Registering resources utilization")
     GPUs = GPUtil.getGPUs()
     gpu = GPUs[0]
     utilization_metrics = {

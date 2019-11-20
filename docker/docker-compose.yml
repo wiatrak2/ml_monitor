@@ -1,0 +1,35 @@
+version: '3.7'
+
+services:
+  prometheus:
+    image: prom/prometheus:v2.14.0
+    ports:
+      - 9090:9090
+    volumes:
+      - prometheus_volume:/prometheus/
+      - ./prometheus/:/etc/prometheus/
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+
+  pushgateway:
+    image: prom/pushgateway:v1.0.0
+    ports:
+     - 9091:9091
+
+  grafana:
+    image: grafana/grafana:6.4.4
+    ports:
+      - 3000:3000
+    depends_on:
+      - prometheus
+    volumes:
+      - grafana_volume:/var/lib/grafana
+      - ./grafana/provisioning/:/etc/grafana/provisioning/
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=ml_monitor
+
+volumes:
+  prometheus_volume:
+    external: false
+  grafana_volume:
+    external: false

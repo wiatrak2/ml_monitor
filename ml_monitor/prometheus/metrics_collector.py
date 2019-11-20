@@ -30,8 +30,8 @@ def distribute_list_metrics(metrics):
             c = collectors[m]
             c.set(metrics[m][i])
         if prometheus.pushgateway:
-            prometheus_client.push_to_gateway('localhost:9091', job=job_title, registry=prometheus.registry)
-        time.sleep(1 - (time.time() - start))
+            prometheus_client.push_to_gateway(prometheus.GATEWAY_URL, job=job_title, registry=prometheus.registry)
+        time.sleep(max(0, 1 - (time.time() - start)))
 
 def pull_metrics(metrics):
     for metrics_dict in metrics:
