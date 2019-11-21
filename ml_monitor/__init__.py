@@ -10,13 +10,15 @@ from ml_monitor import control
 from ml_monitor import prometheus
 from ml_monitor import utils
 
-def init(config_file=None, log_level='info'):
+def init(config_file=None, log_level='info', create_metrics_logger=True):
     logging.create_logger(log_level)
     if config_file is None:
         config_file = os.path.join(os.path.dirname(__file__), "config.yml")
     config.config = utils.safe_init(config.config, config.Config(config_file))
-    metrics_logger.metrics_logger_thread = utils.safe_init(metrics_logger.metrics_logger_thread, metrics_logger.MetricsLogger())
-    metrics_logger.metrics_logger_thread.start()
+    if create_metrics_logger:
+        metrics_logger.metrics_logger_thread = utils.safe_init(metrics_logger.metrics_logger_thread, metrics_logger.MetricsLogger())
+        metrics_logger.metrics_logger_thread.register_hook(utils.register_utlitization)
+        metrics_logger.metrics_logger_thread.start()
 
 def monitor(name, value):
     metrics_logger.metrics_logger_thread.monitor(name, value)

@@ -1,2 +1,3 @@
+title: ml_monitor
 metrics_log_file: .ml_monitor/monitor.log
 log_interval_sec: 5

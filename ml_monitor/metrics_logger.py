@@ -19,7 +19,7 @@ class MetricsLogger:
         for hook in self.pre_log_hooks:
             logging.debug("Applying hook")
             hook()
-        self.monitor_values["title"] = config.config.title
+        self.monitor_values["title"] = config.config.title or "ml_monitor"
         try:
             with open(self.metrics_log_file, "w") as f:
                 json.dump(self.monitor_values, f)
