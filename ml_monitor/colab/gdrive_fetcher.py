@@ -13,9 +13,14 @@ class GDriveFetcher:
         self.thread_running = False
 
     def fetch(self):
-        logging.debug("Fetching metrics from Google Drive...")
-        with prometheus.metrics.fetching_duration.time():
-            gdrive.gdrive.download(self.remote_metrics_log_file, self.local_log_file)
+        try:
+            logging.debug("Fetching metrics from Google Drive...")
+            with prometheus.metrics.fetching_duration.time():
+                gdrive.gdrive.download(self.remote_metrics_log_file, self.local_log_file)
+        except Exception as e:
+            logging.error(f"Exception raised while fetching files from Google Drive:\n{e}")
+            logging.error("Stopping fetching thread due to the exception.")
+            self.stop()
 
     def _run_thread(self):
         self.thread_running = False

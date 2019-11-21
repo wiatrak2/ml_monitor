@@ -6,8 +6,8 @@ def start(log_level="info", logging_dir=None):
     try:
         logging.debug("Starting Prometheus metrics collector..")
         ml_monitor.prometheus.start()
-    except KeyboardInterrupt:
-        logging.info("Metrics collector stopped.")
+    except Exception as e:
+        logging.error(f"Exception raised, stopping metrics collecting.\n{e}")
         ml_monitor.control.stop()
 
 def colab(config_file=None, log_level="info", logging_dir=None):

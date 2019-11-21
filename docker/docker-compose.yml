@@ -5,6 +5,8 @@ services:
     image: prom/prometheus:v2.14.0
     ports:
       - 9090:9090
+    networks:
+      - internal
     volumes:
       - prometheus_volume:/prometheus/
       - ./prometheus/:/etc/prometheus/
@@ -13,6 +15,8 @@ services:
 
   pushgateway:
     image: prom/pushgateway:v1.0.0
+    networks:
+      - internal
     ports:
      - 9091:9091
 
@@ -20,6 +24,8 @@ services:
     image: grafana/grafana:6.4.4
     ports:
       - 3000:3000
+    networks:
+      - internal
     depends_on:
       - prometheus
     volumes:
@@ -33,3 +39,6 @@ volumes:
     external: false
   grafana_volume:
     external: false
+
+networks:
+  internal:
