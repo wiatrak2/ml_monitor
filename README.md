@@ -4,6 +4,13 @@
 ### Requirements:
 * python >= 3.6
 * [docker](https://www.docker.com)
+## Instalation
+1. Clone the repository
+2. Install package using `pip`
+```bash
+git clone https://github.com/wiatrak2/ml_monitor.git
+pip install ./ml_monitor/
+```
 ## Simple setup
 There are two components responsible for a successful monitoring of your training. First of them is a thread that collects metrics inside your notebook or python program. The second is a process that makes use of these metrics, parses them and enables things like a pretty visualization. These seemingly complex tasks are implemented to make usage as easy as possible - let's have a look:
 * `docker` directory contains an easy setup of tools used for metrics visualization and analysis. These are [Prometheus](https://prometheus.io) and [Grafana](https://grafana.com). You should firstly start these programs, with `docker-compose up` command. Now you should be able to reach the Grafana admin panel on http://localhost:3000. Default credentials are `username: admin` and `password: ml_monitor`. Also a Prometheus UI should be reachable on http://localhost:9090. You can learn some basics about the Prometheus and it's features [here](https://prometheus.io/docs/prometheus/latest/getting_started/).
