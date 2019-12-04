@@ -1,5 +1,9 @@
 # ML Monitor
 `ml_monitor` package introduces an effortless monitoring of a machine learning training process. It also provides some useful stats about the resources utilization out of the box. And most important - it is designed for an easy integration with not only Jupyter, but also [Google Colab](https://colab.research.google.com) notebooks.
+![colab_example](https://github.com/wiatrak2/ml_monitoring/blob/master/docs/gifs/loss.gif?raw=true)
+### Requirements:
+* python >= 3.6
+* [docker](https://www.docker.com)
 ## Simple setup
 There are two components responsible for a successful monitoring of your training. First of them is a thread that collects metrics inside your notebook or python program. The second is a process that makes use of these metrics, parses them and enables things like a pretty visualization. These seemingly complex tasks are implemented to make usage as easy as possible - let's have a look:
 * `docker` directory contains an easy setup of tools used for metrics visualization and analysis. These are [Prometheus](https://prometheus.io) and [Grafana](https://grafana.com). You should firstly start these programs, with `docker-compose up` command. Now you should be able to reach the Grafana admin panel on http://localhost:3000. Default credentials are `username: admin` and `password: ml_monitor`. Also a Prometheus UI should be reachable on http://localhost:9090. You can learn some basics about the Prometheus and it's features [here](https://prometheus.io/docs/prometheus/latest/getting_started/).
@@ -39,5 +43,33 @@ import ml_monitor
 ml_monitor.colab.init()
 ```
 * That's it. As easy as previously. Moreover you can find a pre-defined Grafana dashboard *Colab stats* that presents statistics like GPU utilization, RAM usage or how long it took to fetch the metrics from your Google Drive to your local machine.
-
 ![colab_init](https://github.com/wiatrak2/ml_monitoring/blob/master/docs/gifs/colab_init.gif?raw=true)
+## Defining metrics
+Collecting metrics, like value of a loss function, should not require changes in already working code. Also you should be made to add as few lines of code as possible. Therefore, if you want to monitor a metric called `some_stat` and set its value as `0.123`, all you have to do is call the `ml_monitor.monitor` function:
+```python
+ml_monitor.monitor("some_stat", 0.123)
+```
+This metric should be afterwards visible i.e. on Prometheus UI (http://localhost:9090/graph) and charted with Grafana. `some_stat` will have assigned value `0.123` as long as it will be changed manually, like:
+```python
+ml_monitor.monitor("some_stat", 123.0)
+```
+You can call the `ml_monitor.monitor` function the same way from both local code and Google Colab.
+
+![colab_value](https://github.com/wiatrak2/ml_monitoring/blob/master/docs/gifs/colab_value.gif?raw=true)
+Metrics defined within python code are collected with usage of [Prometheus Pushgateway](https://github.com/prometheus/pushgateway). You may noticed that they are described with `exported_job` label, which is by default `ml_monitor` or `colab_ml_monitor`. The `exported_job` label could be used to easily filter values (e.g. losses) from specific training process. Therefore `ml_monitor` allows you to set the `exported_job` with `ml_monitor.set_training(training_name: str)` function:
+```python
+...
+ml_monitor.set_training("colab_ResNet_50")
+...
+for i in range(epochs):
+	...
+	ml_monitor.monitor("loss", loss.item())
+	ml_monitor.monitor("epoch", i)
+...
+```
+You should be then able to filter values from this training using PromQL and curly braces`{}` :
+```
+loss{exported_job="colab_ResNet_50"}
+```
+___
+The `ml_monitor` package is during development, and this is a very alpha version :smile: I hope somebody will find it helpful during long, lonely model training sessions :computer:
