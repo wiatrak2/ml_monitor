@@ -1,6 +1,6 @@
 # ML Monitor
 `ml_monitor` package introduces an effortless monitoring of a machine learning training process. It also provides some useful stats about the resources utilization out of the box. And most important - it is designed for an easy integration with not only Jupyter, but also [Google Colab](https://colab.research.google.com) notebooks.
-![colab_example](https://github.com/wiatrak2/ml_monitoring/blob/master/docs/gifs/loss.gif?raw=true)
+![overview](https://github.com/wiatrak2/ml_monitoring/blob/master/docs/gifs/overview.gif?raw=true)
 ### Requirements:
 * python >= 3.6
 * [docker](https://www.docker.com)
@@ -93,7 +93,7 @@ You should be then able to filter values from this training using PromQL and cur
 ```
 loss{exported_job="colab_ResNet_50"}
 ```
-
+![colab_example](https://github.com/wiatrak2/ml_monitoring/blob/master/docs/gifs/loss.gif?raw=true)
 ## Troubleshooting
 * If during launching `ml_monitor.control.colab()` or some other mechanism that may be using the Google Drive API you get the `googleapiclient.errors.HttpError: <HttpError 403 when requesting https://www.googleapis.com/drive/...` error, the `ml_monitor` may be trying to authenticate with expired credentials. Check if your current directory contains `credentials.json` and remove it.
 ___
