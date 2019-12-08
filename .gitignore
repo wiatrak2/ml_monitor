@@ -5,5 +5,6 @@ __pycache__
 ml_monitor.egg-info
 .vscode
 
+ml_monitor/gdrive/settings.yaml
 **/credentials.json
 playground.ipynb
