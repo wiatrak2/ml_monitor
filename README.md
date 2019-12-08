@@ -5,11 +5,24 @@
 * python >= 3.6
 * [docker](https://www.docker.com)
 ## Instalation
-1. Clone the repository
-2. Install package using `pip`
+1. Clone and enter the repository
 ```bash
 git clone https://github.com/wiatrak2/ml_monitor.git
-pip install ./ml_monitor/
+cd ml_monitor
+```
+2. Run `python configure_gdrive.py` to configure [Google Drive API](developers.google.com/drive/api/), which is required for Colab integration. You need to create a project and enter its credentials - `client_id` and `client_secret`. There are two ways to do it:
+	* Go to [Google Drive API python tutorial](https://developers.google.com/drive/api/v3/quickstart/python) and click **Enable the Drive API**. This will create a new project named *Quickstart* that is already properly configured. You will see a window with `Client ID` and `Client Secret`, that `configure_gdrive.py` is asking you for.
+	* If you want to create a new project for `ml_monitor` you need to go to the [Google API Console](https://console.developers.google.com/) and:
+		* Open *Select a project*  menu (next to the *Google APIs* logo) and click *New project*
+		* Set the project name, create it and enter
+		* Search for the `Google Drive API` and click **Enable**
+		* From the left sidebar select *Credentials*
+		* If you see a **Configure Consent Screen** button click it and fill the form (entering the *Application name* is enough). Then click **Create credentials** and select **OAuth Client ID**, select *Other* from the next view and process
+		* You will see a window with `Client ID` and `Client secret`. Paste them to the `configure_gdrive.py`
+
+3. Install package using `pip`
+```bash
+pip install .
 ```
 ## Simple setup
 There are two components responsible for a successful monitoring of your training. First of them is a thread that collects metrics inside your notebook or python program. The second is a process that makes use of these metrics, parses them and enables things like a pretty visualization. These seemingly complex tasks are implemented to make usage as easy as possible - let's have a look:
