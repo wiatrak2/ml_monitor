@@ -43,6 +43,7 @@ ml_monitor.control.start()
 Following these steps will let you use the package from the very scratch. I believe that there sould be as little required code lines to setup a tool as possible. Therefore, yo udon't have to modify your already working code to extend it with the `montior`.
 
 ![Init](https://github.com/wiatrak2/ml_monitoring/blob/master/docs/gifs/init.gif?raw=true)
+* To finish the `ml_monitor.control` and terminate the running threads use `ml_monitor.control.stop()`.
 ## Google Colab support
 Google Colab notebooks let's you run your code using some top GPUs and even TPU for free. It is a great and essential tool for many ML developers. When the `ml_monitor` project was started, it main purpose was to provide a mechanism to follow any desired metrics real time. Therefore `ml_monitor` allows you to begin the integration with Google Colab as easy as in local Jupyter notebook approach.
 
@@ -64,6 +65,7 @@ ml_monitor.colab.init()
 ```
 * That's it. As easy as previously. Moreover you can find a pre-defined Grafana dashboard *Colab stats* that presents statistics like GPU utilization, RAM usage or how long it took to fetch the metrics from your Google Drive to your local machine.
 ![colab_init](https://github.com/wiatrak2/ml_monitoring/blob/master/docs/gifs/colab_init.gif?raw=true)
+* To finish the `ml_monitor.control` and terminate the running threads use `ml_monitor.control.stop()`.
 ## Defining metrics
 Collecting metrics, like value of a loss function, should not require changes in already working code. Also you should be made to add as few lines of code as possible. Therefore, if you want to monitor a metric called `some_stat` and set its value as `0.123`, all you have to do is call the `ml_monitor.monitor` function:
 ```python
@@ -91,5 +93,8 @@ You should be then able to filter values from this training using PromQL and cur
 ```
 loss{exported_job="colab_ResNet_50"}
 ```
+
+## Troubleshooting
+* If during launching `ml_monitor.control.colab()` or some other mechanism that may be using the Google Drive API you get the `googleapiclient.errors.HttpError: <HttpError 403 when requesting https://www.googleapis.com/drive/...` error, the `ml_monitor` may be trying to authenticate with expired credentials. Check if your current directory contains `credentials.json` and remove it.
 ___
 The `ml_monitor` package is during development, and this is a very alpha version :smile: I hope somebody will find it helpful during long, lonely model training sessions :computer:
