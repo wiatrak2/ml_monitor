@@ -10,7 +10,7 @@
 git clone https://github.com/wiatrak2/ml_monitor.git
 cd ml_monitor
 ```
-2. Run `python configure_gdrive.py` to configure [Google Drive API](developers.google.com/drive/api/), which is required for Colab integration. You need to create a project and enter its credentials - `client_id` and `client_secret`. There are two ways to do it:
+2. Run `python configure_gdrive.py` to configure [Google Drive API](developers.google.com/drive/api/), which is required for Colab integration. You need to create a project and enter its credentials - `client_id` and `client_secret`. There are two ways obtain them:
 	* Go to [Google Drive API python tutorial](https://developers.google.com/drive/api/v3/quickstart/python) and click **Enable the Drive API**. This will create a new project named *Quickstart* that is already properly configured. You will see a window with `Client ID` and `Client Secret`, that `configure_gdrive.py` is asking you for.
 	* If you want to create a new project for `ml_monitor` you need to go to the [Google API Console](https://console.developers.google.com/) and:
 		* Open *Select a project*  menu (next to the *Google APIs* logo) and click *New project*
@@ -55,7 +55,7 @@ To start monitoring your Google Colab notebook you should:
 import ml_monitor
 ml_monitor.control.start()
 ```
-* During the first usage you will be asked for a verification code, so the `ml_monitor` could communicate with your Google Drive. Your browser will (and should) complain about security reasons, but you can still obtain the code and grant the `ml_monitor`  access to your files. It is necessary, as this is the only way to collect the metrics produced by your Colab notebook.
+* During the first usage you will be asked for a verification code, so the `ml_monitor` could communicate with your Google Drive. Your browser will (and should) complain about security aspects, but you can still obtain the code and grant the `ml_monitor`  access to your files. It is necessary, as this is the only way to collect the metrics produced by your Colab notebook.
 
 ![gdrive_auth](https://github.com/wiatrak2/ml_monitoring/blob/master/docs/gifs/gdrive_auth.gif?raw=true)
 * Open your Colab notebook and start monitoring with:
